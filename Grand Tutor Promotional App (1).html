@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Tutor - Academic Success & Custom Tutoring Services</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f2f7f4',
+                            100: '#e1ede7',
+                            200: '#c5dcd1',
+                            600: '#2d6350',
+                            700: '#1E4336', // Original Forest Green theme
+                            800: '#18362b',
+                            900: '#122a22',
+                        },
+                        accent: {
+                            gold: '#d4af37',
+                            purple: '#7e57c2'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Floating background elements animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .floating-icon {
+            animation: float 6s ease-in-out infinite;
+        }
+        .floating-icon-delayed {
+            animation: float 7s ease-in-out 2s infinite;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E4336;
+            border-radius: 4px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-full flex flex-col justify-between relative overflow-x-hidden">
+
+    <!-- Toast Notification for Copying Preferences -->
+    <div id="toast-notification" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+            <div class="w-8 h-8 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-sm font-bold">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold">Preferences Copied!</h4>
+                <p class="text-xs text-slate-300">Paste them directly into your Telegram DM chat.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative Floating Academic Graphics -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-10">
+        <i class="fa-solid fa-pencil text-brand-700 text-6xl absolute top-12 left-10 floating-icon"></i>
+        <i class="fa-solid fa-book-open text-brand-700 text-7xl absolute top-1/4 right-12 floating-icon-delayed"></i>
+        <i class="fa-solid fa-graduation-cap text-brand-700 text-8xl absolute bottom-1/3 left-16 floating-icon"></i>
+        <i class="fa-solid fa-pencil text-brand-700 text-5xl absolute bottom-12 right-20 floating-icon-delayed"></i>
+        <i class="fa-solid fa-atom text-brand-700 text-7xl absolute top-1/2 left-1/2 -translate-x-1/2 floating-icon"></i>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="relative z-10 bg-brand-700 text-white shadow-xl">
+        <div class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3 text-center sm:text-left">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+                    <i class="fa-solid fa-book-bookmark text-amber-300 text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight font-serif text-white">GRAND TUTOR</h1>
+                    <p class="text-xs text-brand-100 font-medium tracking-wide uppercase">Premier Tutoring Services</p>
+                </div>
+            </div>
+
+            <!-- Tab Switcher (Flyer Selector) -->
+            <nav class="bg-brand-900/50 p-1.5 rounded-xl border border-white/10 flex space-x-1 shadow-inner">
+                <button id="tab1-btn" onclick="switchFlyer(1)" 
+                        class="px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-white text-brand-700 shadow-md">
+                    <i class="fa-solid fa-sliders text-xs"></i>
+                    <span>Poster 1: Preferences</span>
+                </button>
+                <button id="tab2-btn" onclick="switchFlyer(2)" 
+                        class="px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-brand-100 hover:text-white hover:bg-white/10">
+                    <i class="fa-solid fa-award text-xs"></i>
+                    <span>Poster 2: Overview</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 flex-grow max-w-5xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+        <!-- ========================================== -->
+        <!-- FLYER 1: WHAT'S YOUR PREFERENCE (INTERACTIVE) -->
+        <!-- ========================================== -->
+        <section id="flyer1" class="transition-all duration-500 ease-in-out">
+            <div class="text-center mb-8">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-100 text-brand-800 mb-3 border border-brand-200">
+                    <i class="fa-solid fa-sparkles text-amber-500"></i> Tailored Learning Experience
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-700 font-serif tracking-tight">
+                    WHAT'S YOUR PREFERENCE?
+                </h2>
+                <p class="text-slate-600 mt-2 text-sm sm:text-base max-w-xl mx-auto">
+                    Select your custom choices below, then submit them directly to Grand Tutor.
+                </p>
+            </div>
+
+            <!-- Interactive Selector Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                
+                <!-- Option 1: Tutor Gender -->
+                <div class="glass-card rounded-2xl p-5 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Preference 01</span>
+                        <i class="fa-solid fa-user-graduate text-brand-700/40 text-lg"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Tutor Preference</h3>
+                    <div class="grid grid-cols-2 gap-3" id="group-gender">
+                        <button type="button" onclick="selectOption('gender', 'Male Tutor', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm active-opt border-brand-600 bg-brand-50 text-brand-700 ring-2 ring-brand-600/20">
+                            <i class="fa-solid fa-mars text-blue-500"></i> Male Tutor
+                        </button>
+                        <button type="button" onclick="selectOption('gender', 'Female Tutor', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm">
+                            <i class="fa-solid fa-venus text-pink-500"></i> Female Tutor
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option 2: Mode of Instruction -->
+                <div class="glass-card rounded-2xl p-5 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Preference 02</span>
+                        <i class="fa-solid fa-laptop-house text-brand-700/40 text-lg"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Learning Format</h3>
+                    <div class="grid grid-cols-2 gap-3" id="group-mode">
+                        <button type="button" onclick="selectOption('mode', 'Online', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm active-opt border-brand-600 bg-brand-50 text-brand-700 ring-2 ring-brand-600/20">
+                            <i class="fa-solid fa-wifi text-emerald-500"></i> Online
+                        </button>
+                        <button type="button" onclick="selectOption('mode', 'Face-to-Face', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm">
+                            <i class="fa-solid fa-people-arrows text-amber-500"></i> Face-to-Face
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option 3: Subjects -->
+                <div class="glass-card rounded-2xl p-5 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Preference 03</span>
+                        <i class="fa-solid fa-microscope text-brand-700/40 text-lg"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Subject Scope</h3>
+                    <div class="grid grid-cols-2 gap-3" id="group-subject">
+                        <button type="button" onclick="selectOption('subject', 'All Subjects', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm active-opt border-brand-600 bg-brand-50 text-brand-700 ring-2 ring-brand-600/20">
+                            <i class="fa-solid fa-book font-normal text-indigo-500"></i> All Subjects
+                        </button>
+                        <button type="button" onclick="selectOption('subject', 'Basic Sciences Only', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm">
+                            <i class="fa-solid fa-flask text-teal-500"></i> Basic Sciences
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Option 4: Tutor Level -->
+                <div class="glass-card rounded-2xl p-5 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Preference 04</span>
+                        <i class="fa-solid fa-chalkboard-user text-brand-700/40 text-lg"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Tutor Experience</h3>
+                    <div class="grid grid-cols-2 gap-3" id="group-level">
+                        <button type="button" onclick="selectOption('level', 'University Student', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm active-opt border-brand-600 bg-brand-50 text-brand-700 ring-2 ring-brand-600/20">
+                            <i class="fa-solid fa-user-pen text-sky-500"></i> Uni Student
+                        </button>
+                        <button type="button" onclick="selectOption('level', 'Lecturer', this)"
+                                class="opt-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 hover:border-brand-600 transition-all text-sm">
+                            <i class="fa-solid fa-graduation-cap text-purple-500"></i> Lecturer
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Live Summary & Dynamic Badges Card -->
+            <div class="bg-brand-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden mb-8">
+                <div class="absolute -right-12 -top-12 w-36 h-36 bg-amber-400/20 rounded-full blur-2xl"></div>
+                
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-3 text-center md:text-left w-full">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400 text-slate-900 font-bold text-xs uppercase tracking-wider shadow-sm">
+                            <i class="fa-solid fa-sliders"></i> Your Selected Plan
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold font-serif">Selected Preference Summary</h3>
+                        
+                        <!-- Visual Badges / Pills for Live Choices -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start pt-1" id="badges-container">
+                            <span class="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check text-emerald-400"></i> <span id="badge-gender">Male Tutor</span>
+                            </span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check text-emerald-400"></i> <span id="badge-mode">Online</span>
+                            </span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check text-emerald-400"></i> <span id="badge-subject">All Subjects</span>
+                            </span>
+                            <span class="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check text-emerald-400"></i> <span id="badge-level">University Student</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20 text-center min-w-[200px] shrink-0">
+                        <span class="block text-xs uppercase text-brand-200 tracking-wider">Pricing Offer</span>
+                        <span class="text-lg font-bold text-amber-300 flex items-center justify-center gap-1.5 mt-0.5">
+                            <i class="fa-solid fa-tag"></i> With Fair Price
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Interactive Submission Options Box -->
+            <div class="bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-brand-800">
+                <div class="text-center max-w-xl mx-auto mb-6">
+                    <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-500/30">
+                        Fast Submission
+                    </span>
+                    <h3 class="text-2xl font-bold font-serif text-white">Send Your Preferences to Grand Tutor</h3>
+                    <p class="text-slate-300 text-xs sm:text-sm mt-1">
+                        Choose how you would like to send your exact choices to our coordinators.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                    <!-- Option A: Copy to Clipboard for Telegram -->
+                    <button onclick="copyPreferencesToClipboard()" 
+                            class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 transition-all text-center group active:scale-95">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center text-xl font-bold mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-copy"></i>
+                        </div>
+                        <span class="font-bold text-sm text-white">1. Copy Preferences</span>
+                        <span class="text-[11px] text-amber-300/80 mt-1">Copy summary to clipboard</span>
+                    </button>
+
+                    <!-- Option B: Direct Telegram DM -->
+                    <a id="telegram-link" href="https://t.me/GRANDTUTORS1" target="_blank" rel="noopener noreferrer"
+                       class="flex flex-col items-center justify-center p-4 rounded-2xl bg-sky-600/90 hover:bg-sky-500 border border-sky-400/30 transition-all text-center group active:scale-95 shadow-lg">
+                        <div class="w-12 h-12 rounded-2xl bg-white text-sky-600 flex items-center justify-center text-xl font-bold mb-3 shadow-md group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                        <span class="font-bold text-sm text-white">2. Open Telegram DM</span>
+                        <span class="text-[11px] text-sky-100 mt-1">Paste & send to @GRANDTUTORS1</span>
+                    </a>
+
+                    <!-- Option C: Send via Direct SMS (1-Tap Mobile) -->
+                    <a id="sms-btn" href="#" 
+                       class="flex flex-col items-center justify-center p-4 rounded-2xl bg-emerald-600/90 hover:bg-emerald-500 border border-emerald-400/30 transition-all text-center group active:scale-95 shadow-lg">
+                        <div class="w-12 h-12 rounded-2xl bg-white text-emerald-600 flex items-center justify-center text-xl font-bold mb-3 shadow-md group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-comment-sms"></i>
+                        </div>
+                        <span class="font-bold text-sm text-white">Send via SMS</span>
+                        <span class="text-[11px] text-emerald-100 mt-1">Instant 1-tap SMS request</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- FLYER 2: ACADEMIC GOALS & OVERVIEW -->
+        <!-- ========================================== -->
+        <section id="flyer2" class="hidden transition-all duration-500 ease-in-out">
+            <!-- Headline Banner -->
+            <div class="bg-gradient-to-r from-brand-800 via-brand-700 to-brand-800 text-white rounded-3xl p-8 sm:p-12 shadow-xl text-center relative overflow-hidden mb-8 border border-white/10">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
+                
+                <div class="relative z-10 max-w-2xl mx-auto space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-lg mb-2">
+                        <i class="fa-solid fa-chart-line text-amber-300 text-3xl"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl sm:text-4xl font-extrabold font-serif leading-tight">
+                        Looking for better grade and academic performance?
+                    </h2>
+                    
+                    <div class="py-3">
+                        <span class="inline-block px-6 py-2 rounded-xl bg-purple-600 text-white font-extrabold tracking-widest uppercase text-lg sm:text-xl shadow-lg border border-purple-400/30">
+                            GRAND TUTOR IS HERE TO HELP
+                        </span>
+                    </div>
+
+                    <p class="text-brand-100 text-sm sm:text-base leading-relaxed">
+                        We connect students with dedicated, highly qualified tutors to accelerate learning, boost confidence, and ensure top academic achievement.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual Feature Highlights -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                <div class="glass-card p-6 rounded-2xl text-center border shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1">Tailored Learning</h4>
+                    <p class="text-xs text-slate-500">Customized teaching methods built around student needs.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center border shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1">Grade Improvement</h4>
+                    <p class="text-xs text-slate-500">Proven track record of raising student academic performance.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center border shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1">Expert Educators</h4>
+                    <p class="text-xs text-slate-500">Top university students and experienced lecturers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Direct Contact Section (Shared Header Info) -->
+        <section class="mt-8 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800 font-serif">Direct Contact Info</h3>
+                <p class="text-slate-500 text-sm">Call us directly or send a message anytime.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+                <!-- Phone Call Action -->
+                <a href="tel:+251980806056" 
+                   class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-600 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-700 text-white flex items-center justify-center text-lg group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="block text-xs text-slate-400 font-medium">CALL US</span>
+                            <span class="font-bold text-slate-800 group-hover:text-brand-700">+251 980 806 056</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-brand-700 transition-colors"></i>
+                </a>
+
+                <!-- Telegram Action -->
+                <a href="https://t.me/GRANDTUTORS1" target="_blank" rel="noopener noreferrer" 
+                   class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-500 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center text-lg group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="block text-xs text-slate-400 font-medium">TELEGRAM</span>
+                            <span class="font-bold text-slate-800 group-hover:text-sky-600">@GRANDTUTORS1</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-slate-300 group-hover:text-sky-500 transition-colors"></i>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-slate-900 text-slate-400 py-6 text-center text-xs mt-12">
+        <p>© Grand Tutor. All rights reserved. Quality Education at Fair Prices.</p>
+    </footer>
+
+    <!-- Interactive JavaScript Logic -->
+    <script>
+        // Track active selections for Flyer 1
+        const userPreferences = {
+            gender: 'Male Tutor',
+            mode: 'Online',
+            subject: 'All Subjects',
+            level: 'University Student'
+        };
+
+        // Initialize dynamic link state on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSubmissionLinks();
+        });
+
+        // Switch between Poster 1 and Poster 2 tabs
+        function switchFlyer(flyerNum) {
+            const flyer1 = document.getElementById('flyer1');
+            const flyer2 = document.getElementById('flyer2');
+            const btn1 = document.getElementById('tab1-btn');
+            const btn2 = document.getElementById('tab2-btn');
+
+            if (flyerNum === 1) {
+                flyer1.classList.remove('hidden');
+                flyer2.classList.add('hidden');
+
+                // Active Button Styling
+                btn1.className = "px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-white text-brand-700 shadow-md";
+                btn2.className = "px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-brand-100 hover:text-white hover:bg-white/10";
+            } else {
+                flyer1.classList.add('hidden');
+                flyer2.classList.remove('hidden');
+
+                // Active Button Styling
+                btn2.className = "px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-white text-brand-700 shadow-md";
+                btn1.className = "px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-brand-100 hover:text-white hover:bg-white/10";
+            }
+        }
+
+        // Handle user clicks on preference options
+        function selectOption(category, value, element) {
+            userPreferences[category] = value;
+
+            // Update button styles in group
+            const parent = element.parentElement;
+            const buttons = parent.querySelectorAll('.opt-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('active-opt', 'border-brand-600', 'bg-brand-50', 'text-brand-700', 'ring-2', 'ring-brand-600/20');
+                btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+            });
+
+            element.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+            element.classList.add('active-opt', 'border-brand-600', 'bg-brand-50', 'text-brand-700', 'ring-2', 'ring-brand-600/20');
+
+            // Update UI & dynamic URLs
+            updateUIBadges();
+            updateSubmissionLinks();
+        }
+
+        // Update Pill Badges
+        function updateUIBadges() {
+            document.getElementById('badge-gender').textContent = userPreferences.gender;
+            document.getElementById('badge-mode').textContent = userPreferences.mode;
+            document.getElementById('badge-subject').textContent = userPreferences.subject;
+            document.getElementById('badge-level').textContent = userPreferences.level;
+        }
+
+        // Build formatted text string
+        function getFormattedMessage() {
+            return `Hello Grand Tutor! Here are my tutoring preferences:\n- Preference: ${userPreferences.gender}\n- Format: ${userPreferences.mode}\n- Subjects: ${userPreferences.subject}\n- Tutor Level: ${userPreferences.level}\n\nPlease let me know the availability and fair price structure. Thank you!`;
+        }
+
+        // Update SMS dynamic link
+        function updateSubmissionLinks() {
+            const rawMessage = getFormattedMessage();
+            const encodedMessage = encodeURIComponent(rawMessage);
+            
+            // Set dynamic SMS link
+            const smsBtn = document.getElementById('sms-btn');
+            if (smsBtn) {
+                smsBtn.href = `sms:+251980806056?body=${encodedMessage}`;
+            }
+        }
+
+        // Copy preferences to clipboard & show Toast
+        function copyPreferencesToClipboard() {
+            const textToCopy = getFormattedMessage();
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast();
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(textToCopy);
+                });
+            } else {
+                fallbackCopyTextToClipboard(textToCopy);
+            }
+        }
+
+        // Fallback method using document.execCommand
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // Show toast animation
+        function showToast() {
+            const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
